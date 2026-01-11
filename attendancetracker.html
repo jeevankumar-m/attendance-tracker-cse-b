@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance Tracker</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box; 
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        padding: 40px;
+        max-width: 900px;
+        width: 100%;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 30px;
+        text-align: center;
+        font-size: 28px;
+      }
+
+      .table-container {
+        overflow-y: auto;
+        margin-bottom: 25px;
+        flex: 1;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      th {
+        padding: 16px 12px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+      }
+
+      th:first-child {
+        text-align: center;
+        width: 60px;
+      }
+
+      th:nth-child(3),
+      th:nth-child(4) {
+        text-align: center;
+        width: 100px;
+      }
+
+      tbody tr {
+        border-bottom: 1px solid #e9ecef;
+        transition: background 0.2s ease;
+      }
+
+      tbody tr:hover {
+        background: #f8f9fa;
+      }
+
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+
+      td {
+        padding: 14px 12px;
+        color: #333;
+      }
+
+      td:first-child {
+        text-align: center;
+        font-weight: 600;
+        color: #667eea;
+        font-size: 14px;
+      }
+
+      .student-name {
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .student-details {
+        font-size: 12px;
+        color: #6c757d;
+      }
+
+      .checkbox-cell {
+        text-align: center;
+      }
+
+      input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: #667eea;
+      }
+
+      .generate-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .generate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .generate-btn:active {
+        transform: translateY(0);
+      }
+
+      .output-section {
+        margin-top: 30px;
+        display: none;
+      }
+
+      .output-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .output-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .copy-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        transition: background 0.3s ease;
+      }
+
+      .copy-btn:hover {
+        background: #218838;
+      }
+
+      .copy-btn.copied {
+        background: #5cb85c;
+      }
+
+      .output-content {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        white-space: pre-wrap;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        line-height: 1.8;
+        color: #333;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .copy-icon {
+        width: 16px;
+        height: 16px;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 20px;
+        }
+
+        th,
+        td {
+          padding: 12px 8px;
+          font-size: 12px;
+        }
+
+        .student-name {
+          font-size: 13px;
+        }
+
+        .student-details {
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📋 Attendance Tracker</h1>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Name</th>
+              <th>Absent</th>
+              <th>OD</th>
+            </tr>
+          </thead>
+          <tbody id="studentTableBody"></tbody>
+        </table>
+      </div>
+
+      <button class="generate-btn" onclick="generateList()">
+        Generate Absentee List
+      </button>
+
+      <div class="output-section" id="outputSection">
+        <div class="output-header">
+          <span class="output-title">Generated List</span>
+          <button class="copy-btn" onclick="copyToClipboard()">
+            <svg
+              class="copy-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path
+                d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+              ></path>
+            </svg>
+            <span id="copyText">Copy</span>
+          </button>
+        </div>
+        <div class="output-content" id="outputContent"></div>
+      </div>
+    </div>
+
+    <script>
+      const students = [
+        { name: "Alfrin Solomon Peter J", secId: "NULL" },
+        { name: "Balakumar E", secId: "NULL" },
+        { name: "Deepak S", secId: "NULL" },
+        { name: "Deepak V", secId: "NULL" },
+        { name: "Govinda Balaji M", secId: "NULL" },
+        { name: "Gowtham K", secId: "NULL" },
+        { name: "Hari Prasath D", secId: "NULL" },
+        { name: "Jaya Suriya T R", secId: "NULL" },
+        { name: "Jeevan Kumar M", secId: "NULL" },
+        { name: "Jeyachandran S", secId: "NULL" },
+        { name: "Kamaleshwaran P", secId: "NULL" },
+        { name: "Kannan N", secId: "NULL" },
+        { name: "Karthik Krishna S", secId: "NULL" },
+        { name: "Kirthik Satyamoorthy L", secId: "NULL" },
+        { name: "Lakshan Arvind S", secId: "NULL" },
+        { name: "Loageshkanna J G", secId: "NULL" },
+        { name: "Lokesh S", secId: "NULL" },
+        { name: "Mithun B", secId: "NULL" },
+        { name: "Mohamed Yasar A", secId: "NULL" },
+        { name: "Mohammed Haris Suhaib M", secId: "NULL" },
+        { name: "Muhundram S", secId: "NULL" },
+        { name: "Mukesh P", secId: "NULL" },
+        { name: "Nidhish S V", secId: "NULL" },
+        { name: "Nilavarash P G S", secId: "NULL" },
+        { name: "Prabhanjan A", secId: "NULL" },
+        { name: "Pranav A S", secId: "NULL" },
+        { name: "Prateesh J K", secId: "NULL" },
+        { name: "Ridun Kirsna N", secId: "NULL" },
+        { name: "Sachin N", secId: "NULL" },
+        { name: "Sanjay V", secId: "NULL" },
+        { name: "Siddarth M", secId: "NULL" },
+        { name: "Tamilselvan G S", secId: "NULL" },
+        { name: "Vetrivel U", secId: "NULL" },
+        { name: "Vishwa S", secId: "NULL" },
+        { name: "Abirami K", secId: "NULL" },
+        { name: "Anbu Thamizhachi D R", secId: "NULL" },
+        { name: "Deepavarshini A", secId: "NULL" },
+        { name: "Dhebadharshini K", secId: "NULL" },
+        { name: "Dhivya J", secId: "NULL" },
+        { name: "Eniya R", secId: "NULL" },
+        { name: "Induja K", secId: "NULL" },
+        { name: "Janani D", secId: "NULL" },
+        { name: "Jashmitha B", secId: "NULL" },
+        { name: "Jaya Sivapriya", secId: "NULL" },
+        { name: "Keerthika J", secId: "NULL" },
+        { name: "Kiruba S", secId: "NULL" },
+        { name: "Kiruthika G", secId: "NULL" },
+        { name: "Kogilavani K", secId: "NULL" },
+        { name: "Mouviya Deepika P", secId: "NULL" },
+        { name: "Nivedhita R", secId: "NULL" },
+        { name: "Poorvisha T", secId: "NULL" },
+        { name: "Prerna N", secId: "NULL" },
+        { name: "Rituparna B", secId: "NULL" },
+        { name: "Sainikasri S", secId: "NULL" },
+        { name: "Sanjana Y", secId: "NULL" },
+        { name: "Sarmitha S", secId: "NULL" },
+        { name: "Shree Jyothi R", secId: "NULL" },
+        { name: "Srisha T", secId: "NULL" },
+        { name: "Theerthasri R", secId: "NULL" },
+        { name: "Senthil Kumar Kalanidhi", secId: "NULL" },
+        { name: "Dhavakrishnan M", secId: "NULL" },
+        { name: "Sindhuja K", secId: "NULL" },
+        { name: "Nimaleshwar R", secId: "NULL" },
+      ];
+
+      function renderTable() {
+        const tbody = document.getElementById("studentTableBody");
+        students.forEach((student, index) => {
+          const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>
+                            <div class="student-name">${student.name}</div>
+                            <div class="student-details">${student.secId}</div>
+                        </td>
+                        <td class="checkbox-cell">
+                            <input type="checkbox" class="absent-check" data-index="${index}">
+                        </td>
+                        <td class="checkbox-cell">
+                            <input type="checkbox" class="od-check" data-index="${index}">
+                        </td>
+                    </tr>
+                `;
+          tbody.innerHTML += row;
+        });
+      }
+
+      function getTodayDate() {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, "0");
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const year = today.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
+
+      function generateList() {
+        const absentChecks = document.querySelectorAll(".absent-check");
+        const odChecks = document.querySelectorAll(".od-check");
+        const absentees = [];
+
+        students.forEach((student, index) => {
+          const isAbsent = absentChecks[index].checked;
+          const isOD = odChecks[index].checked;
+
+          if (isAbsent || isOD) {
+            absentees.push({
+              name: student.name,
+              isOD: isOD,
+            });
+          }
+        });
+
+        if (absentees.length === 0) {
+          alert("No absentees selected!");
+          return;
+        }
+
+        let output = `Absentees (${getTodayDate()})\n`;
+        absentees.forEach((student, index) => {
+          output += `${index + 1}. ${student.name}`;
+          if (student.isOD) {
+            output += " - OD";
+          }
+          output += "\n";
+        });
+
+        document.getElementById("outputContent").textContent = output;
+        document.getElementById("outputSection").style.display = "block";
+      }
+
+      function copyToClipboard() {
+        const content = document.getElementById("outputContent").textContent;
+        navigator.clipboard.writeText(content).then(() => {
+          const copyBtn = document.querySelector(".copy-btn");
+          const copyText = document.getElementById("copyText");
+          copyBtn.classList.add("copied");
+          copyText.textContent = "Copied!";
+
+          setTimeout(() => {
+            copyBtn.classList.remove("copied");
+            copyText.textContent = "Copy";
+          }, 2000);
+        });
+      }
+
+      renderTable();
+    </script>
+  </body>
+</html>
