@@ -281,10 +281,21 @@ function generateList() {
     document.getElementById("outputContent").textContent = output;
     document.getElementById("outputSection").style.display = "block";
 
-    // Scroll to output section
-    document.getElementById("outputSection").scrollIntoView({
-        behavior: 'smooth'
-    });
+    // Scroll to output section (scroll to bottom on mobile)
+    setTimeout(() => {
+        if (window.innerWidth <= 768) {
+            // On mobile, scroll to the bottom of the page
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        } else {
+            // On desktop, scroll to output section
+            document.getElementById("outputSection").scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    }, 100);
 }
 
 // Copy to clipboard
@@ -337,6 +348,24 @@ function updateOnlineStatus() {
     }
 }
 
+// Scroll to top function
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Handle scroll to show/hide scroll-to-top button
+function handleScroll() {
+    const scrollTopBtn = document.getElementById("scrollTopBtn");
+    if (window.scrollY > 300) {
+        scrollTopBtn.classList.add("show");
+    } else {
+        scrollTopBtn.classList.remove("show");
+    }
+}
+
 // Initialize the app
 function initApp() {
     // Set current date
@@ -349,6 +378,9 @@ function initApp() {
     updateOnlineStatus();
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
+
+    // Set up scroll event listener for scroll-to-top button
+    window.addEventListener('scroll', handleScroll);
 
     // Hide mobile generate button on desktop
     if (window.innerWidth > 768) {

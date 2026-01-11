@@ -60,12 +60,10 @@ h1 {
 
 .table-container {
   flex: 1;
-  overflow-y: auto;
   margin-bottom: 20px;
   border-radius: 10px;
   border: 1px solid #e9ecef;
   position: relative;
-  max-height: 60vh;
 }
 
 /* Single scroll system */
@@ -359,6 +357,36 @@ input[type="checkbox"]:hover {
   transform: scale(1.1);
 }
 
+.scroll-top-btn {
+  display: none;
+  position: fixed;
+  bottom: 95px;
+  right: 25px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+}
+
+.scroll-top-btn.show {
+  display: flex;
+  opacity: 1;
+}
+
+.scroll-top-btn:hover {
+  transform: scale(1.1);
+}
+
 .stats-bar {
   display: flex;
   justify-content: space-between;
@@ -437,7 +465,7 @@ input[type="checkbox"]:hover {
   }
 
   .table-container {
-    max-height: 55vh;
+    max-height: none;
   }
 
   th,
