@@ -62,6 +62,7 @@ const students = [
     { name: "Dhavakrishnan M", secId: "NULL" },
     { name: "Sindhuja K", secId: "NULL" },
     { name: "Nimaleshwar R", secId: "NULL" },
+    { name: "Asim Z", secId: "NULL" },
 ];
 
 // Set up service worker for offline capability
